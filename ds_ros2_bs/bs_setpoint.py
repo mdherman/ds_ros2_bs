@@ -3,7 +3,8 @@ from rclpy.node import Node
 
 # Import correct msg
 from std_msgs.msg import String
-from ds_msgs.msg import TrajectorySetpoint
+#from ds_msgs.msg import TrajectorySetpoint
+from px4_msgs.msg import TrajectorySetpoint
 
 
 # Create setpoint publisher class
@@ -29,30 +30,37 @@ class SetpointPublisher(Node):
         # Create TrajectorySetpoint message instance
         msg = TrajectorySetpoint()
         
+        # Get setpoints file path
+        setpoint_file_path = input("Setpoint file path: ")        
+                
         # Keep prompt going
         while True:
+            
+            send_setpoint_input = "not enter"
+            send_setpoint_input = input("Press enter to send setpoints...")
+            
+            # Wait for user to hit enter
+            if (send_setpoint_input == ""):
+                # Read setpoint text-file and add values to setpoints_ dict
+                setpoint_file = open(setpoint_file_path, "r")
 
-            # Read setpoint text-file and add values to setpoints_ dict
-            setpoint_file_path = input("Setpoint file path: ")
-            setpoint_file = open(setpoint_file_path, "r")
+                for line in setpoint_file:
+                    key = ""
+                    for char in line:
+                        if (char != ":"):
+                            key += char
+                        else:
+                            if (key in self.setpoints_):
+                                self.setpoints_[key] = round(float(line[line.find(":")+2:]), 5)
 
-            for line in setpoint_file:
-                key = ""
-                for char in line:
-                    if (char != ":"):
-                        key += char
-                    else:
-                        if (key in self.setpoints_):
-                            self.setpoints_[key] = round(float(line[line.find(":")+2:]), 5)
+                # Match setpoints from setpoint file with message
+                msg.x = self.setpoints_["x"]
+                msg.y = self.setpoints_["y"]
+                msg.z = self.setpoints_["z"]
+                msg.yaw = self.setpoints_["yaw"]
 
-            # Match setpoints from setpoint file with message
-            msg.x = self.setpoints_["x"]
-            msg.y = self.setpoints_["y"]
-            msg.z = self.setpoints_["z"]
-            msg.yaw = self.setpoints_["yaw"]
-
-            # Publish message to 'bs_use_setpoint'-topic
-            self.publisher_.publish(msg)
+                # Publish message to 'bs_use_setpoint'-topic
+                self.publisher_.publish(msg)
 
 
 def main(args=None):
