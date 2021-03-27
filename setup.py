@@ -4,7 +4,7 @@ package_name = 'ds_ros2_bs'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.0.1',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='martinmaeland',
     maintainer_email='martinmaeland@outlook.com',
-    description='ROS2 node for data transfer between ground station to drone.',
+    description='ROS2 package for data transfer between ground station to drone.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
