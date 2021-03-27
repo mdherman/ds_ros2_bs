@@ -3,9 +3,12 @@
 <package format="3">
   <name>ds_ros2_bs</name>
   <version>0.0.1</version>
-  <description>ROS2 node for data transfer between ground station to drone.</description>
+  <description>ROS2 package for data transfer between ground station to drone.</description>
   <maintainer email="martinmaeland@outlook.com">martinmaeland</maintainer>
   <license>TODO: License declaration</license>
+  
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>px4_msgs</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
