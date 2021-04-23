@@ -24,16 +24,18 @@ class DroneControlNode(Node):
         # Create DroneControl message instance
         msg = DroneControl()
 
+        # Welcome message
+        print("Droneswarm control center")
+
         # Keep prompt going
         while True:
 
             send_control_input = "not enter"
-	    send_control_input = input(">>")
+            send_control_input = input(">>")
 
-	    if (send_control_input == ""):
-		send_control_input = "blank"
+            if (send_control_input == ""):
+                send_control_input = "blank"
 
-            # Wait for user to hit enter
             if (send_control_input.upper() == "DISARM"):
                 print("Disarm command sent..")
                 msg.arm = False
@@ -43,8 +45,7 @@ class DroneControlNode(Node):
                 msg.arm = True
 
             else:
-                msg.arm = False
-                msg.offoard_control = False
+                print("invalid command..")
 
 
             # Publish message to 'bs_use_control'-topic
