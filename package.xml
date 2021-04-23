@@ -8,7 +8,6 @@
   <license>TODO: License declaration</license>
 
   <exec_depend>rclpy</exec_depend>
-  <exec_depend>px4_msgs</exec_depend>
   <exec_depend>ds_ros2_msgs</exec_depend>
 
 

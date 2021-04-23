@@ -3,12 +3,11 @@ from rclpy.node import Node
 
 # Import msg
 from std_msgs.msg import String
-from px4_msgs.msg import TrajectorySetpoint
-from ds_msgs.msg import DroneControl
+from ds_ros2_msgs.msg import DroneControl
 
 
 # Create setpoint publisher class
-class DroneControl(Node):
+class DroneControlNode(Node):
 
     def __init__(self):
         # Init publisher
@@ -29,14 +28,17 @@ class DroneControl(Node):
         while True:
 
             send_control_input = "not enter"
-            send_control_input = input(">>")
+	    send_control_input = input(">>")
+
+	    if (send_control_input == ""):
+		send_control_input = "blank"
 
             # Wait for user to hit enter
             if (send_control_input.upper() == "DISARM"):
                 print("Disarm command sent..")
                 msg.arm = False
 
-            else if (send_control_input.upper() == "ARM":
+            elif (send_control_input.upper() == "ARM"):
                 print("Arm command sent..")
                 msg.arm = True
 
@@ -45,8 +47,6 @@ class DroneControl(Node):
                 msg.offoard_control = False
 
 
-            }
-
             # Publish message to 'bs_use_control'-topic
             self.publisher_.publish(msg)
 
@@ -54,7 +54,7 @@ class DroneControl(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    bs_droneControl = DroneControl()
+    bs_droneControl = DroneControlNode()
 
     rclpy.spin(bs_droneControl)
 
