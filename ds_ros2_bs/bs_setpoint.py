@@ -3,8 +3,7 @@ from rclpy.node import Node
 
 # Import correct msg
 from std_msgs.msg import String
-#from ds_msgs.msg import TrajectorySetpoint
-from px4_msgs.msg import TrajectorySetpoint
+from ds_ros2_msgs.msg import TrajectorySetpoint
 
 
 # Create setpoint publisher class
