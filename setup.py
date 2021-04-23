@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'bs_setpoint = ds_ros2_bs.bs_setpoint:main'
+            'bs_droneControl = ds_ros2_bs.bs_dronControl:main'
         ],
     },
 )

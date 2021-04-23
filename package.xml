@@ -6,9 +6,11 @@
   <description>ROS2 package for data transfer between ground station to drone.</description>
   <maintainer email="martinmaeland@outlook.com">martinmaeland</maintainer>
   <license>TODO: License declaration</license>
-  
+
   <exec_depend>rclpy</exec_depend>
   <exec_depend>px4_msgs</exec_depend>
+  <exec_depend>ds_ros2_msgs</exec_depend>
+
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
