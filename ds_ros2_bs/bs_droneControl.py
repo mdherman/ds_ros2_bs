@@ -4,6 +4,7 @@ from rclpy.node import Node
 # Import msg
 from std_msgs.msg import String
 from ds_ros2_msgs.msg import DroneControl
+from ds_ros2_msgs.msg import TrajectorySetpoint
 
 
 # Create setpoint publisher class
@@ -12,7 +13,13 @@ class DroneControlNode(Node):
     def __init__(self):
         # Init publisher
         super().__init__('bs_droneControl')
-        self.publisher_ = self.create_publisher(DroneControl, 'bs_use_control', 10)
+
+        # Create publishers
+        self.control_publisher_ = self.create_publisher(DroneControl, 'bs_use_control', 10)
+        self.setpoint_publisher_ = self.create_publisher(TrajectorySetpoint, 'bs_use_setpoint', 10)
+
+        # Variables
+        self.launch = False
 
         # Run prompt function
         self.prompt_user()
@@ -22,7 +29,8 @@ class DroneControlNode(Node):
     def prompt_user(self):
 
         # Create DroneControl message instance
-        msg = DroneControl()
+        control_msg = DroneControl()
+        setpoint_msg = TrajectorySetpoint()
 
         # Welcome message
         print("#------------------------#")
@@ -34,31 +42,70 @@ class DroneControlNode(Node):
 
             send_control_input = "not enter"
             send_control_input = input(">>")
-            
+
             # If input is blank, catch error
             if (send_control_input == ""):
                 send_control_input = "blank"
-            
+
             # Check command input
             if (send_control_input.upper() == "DISARM"):
-                
+
                 # Disarm
                 print("Disarm command sent..")
-                msg.arm = False
-                msg.offboard_control = False
-                self.publisher_.publish(msg)
+                control_msg.arm = False
+                control_msg.offboard_control = False
+                self.control_publisher_.publish(control_msg)
 
             elif (send_control_input.upper() == "ARM"):
-                
+
                 # Disarm before arm
-                msg.arm = False
-                self.publisher_.publish(msg)
-                
+                control_msg.arm = False
+                self.control_publisher_.publish(control_msg)
+
                 # Arm and offboard control true
                 print("Arm command sent..")
-                msg.arm = True
-                msg.offboard_control = True
-                self.publisher_.publish(msg)
+                control_msg.arm = True
+                control_msg.offboard_control = True
+                self.control_publisher_.publish(control_msg)
+
+            elif (send_control_input.upper() == "LAUNCH"):
+                control_msg.launch = True
+                self.control_publisher_.publish(control_msg)
+                print("Launch command sent...")
+
+            elif (send_control_input.upper() == "LAND"):
+                control_msg.launch = False
+                self.control_publisher_.publish(control_msg)
+                print("Land command sent...")
+
+            elif (send_control_input.upper()[0] == "X"):
+                print("Setpoint x sent...")
+                setpoint_msg.x = float(send_control_input[1:])
+                self.setpoint_publisher_.publish(setpoint_msg)
+
+            elif (send_control_input.upper()[0] == "Y"):
+                print("Setpoint y sent...")
+                setpoint_msg.y = float(send_control_input[1:])
+                self.setpoint_publisher_.publish(setpoint_msg)
+
+            elif (send_control_input.upper()[0] == "Z"):
+                print("Setpoint z sent...")
+                setpoint_msg.z = float(send_control_input[1:])
+                self.setpoint_publisher_.publish(setpoint_msg)
+
+            elif (send_control_input.upper() == "RESET"):
+                setpoint_msg.x = 0.0
+                setpoint_msg.y = 0.0
+                setpoint_msg.z = 0.0
+                setpoint_msg.yaw = 0.0
+
+                control_msg.arm = False
+                control_msg.launch = False
+
+                print("All reset..")
+
+                self.setpoint_publisher_.publish(setpoint_msg)
+                self.control_publisher_.publish(control_msg)
 
             else:
                 print("invalid command..")
