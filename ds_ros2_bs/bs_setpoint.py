@@ -28,16 +28,16 @@ class SetpointPublisher(Node):
     def prompt_user(self):
         # Create TrajectorySetpoint message instance
         msg = TrajectorySetpoint()
-        
+
         # Get setpoints file path
-        setpoint_file_path = input("Setpoint file path: ")        
-                
+        setpoint_file_path = input("Setpoint file path: ")
+
         # Keep prompt going
         while True:
-            
+
             send_setpoint_input = "not enter"
             send_setpoint_input = input("Press enter to send setpoints...")
-            
+
             # Wait for user to hit enter
             if (send_setpoint_input == ""):
                 # Read setpoint text-file and add values to setpoints_ dict

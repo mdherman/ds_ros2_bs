@@ -53,7 +53,6 @@ class DroneControlNode(Node):
                 # Disarm
                 print("Disarm command sent..")
                 control_msg.arm = False
-                control_msg.offboard_control = False
                 self.control_publisher_.publish(control_msg)
 
             elif (send_control_input.upper() == "ARM"):
@@ -65,13 +64,22 @@ class DroneControlNode(Node):
                 # Arm and offboard control true
                 print("Arm command sent..")
                 control_msg.arm = True
-                control_msg.offboard_control = True
                 self.control_publisher_.publish(control_msg)
 
             elif (send_control_input.upper() == "LAUNCH"):
                 control_msg.launch = True
                 self.control_publisher_.publish(control_msg)
                 print("Launch command sent...")
+
+            elif (send_control_input.upper() == "TURN PX ON"):
+                control_msg.switch_px = True
+                self.control_publisher_.publish(control_msg)
+                print("Switched on pixhawk...")
+
+            elif (send_control_input.upper() == "TURN PX OFF"):
+                control_msg.switch_px = False
+                self.control_publisher_.publish(control_msg)
+                print("Switched off pixhawk...")
 
             elif (send_control_input.upper() == "LAND"):
                 control_msg.launch = False
@@ -93,14 +101,48 @@ class DroneControlNode(Node):
                 setpoint_msg.z = float(send_control_input[1:])
                 self.setpoint_publisher_.publish(setpoint_msg)
 
+            elif (send_control_input.upper()[0:2] == "VZ"):
+                print("Setpoint vz sent...")
+                setpoint_msg.vz = float(send_control_input[2:])
+                self.setpoint_publisher_.publish(setpoint_msg)
+
+            elif (send_control_input.upper() == "VELOCITY"):
+                setpoint_msg.x = float("NaN")
+                setpoint_msg.y = float("NaN")
+                setpoint_msg.z = float("NaN")
+                setpoint_msg.yaw = float("NaN")
+                setpoint_msg.yawspeed = float("NaN")
+                setpoint_msg.vx = 0.0
+                setpoint_msg.vy = 0.0
+                setpoint_msg.vz = 0.0
+                setpoint_msg.acceleration = [float("NaN"), float("NaN"), float("NaN")]
+                setpoint_msg.jerk = [float("NaN"), float("NaN"), float("NaN")]
+                setpoint_msg.thrust = [float("NaN"), float("NaN"), float("NaN")]
+
+                control_msg.arm = False
+                control_msg.launch = True
+
+                print("Ready for velocity setpoints..")
+
+                self.setpoint_publisher_.publish(setpoint_msg)
+                self.control_publisher_.publish(control_msg)
+
+
             elif (send_control_input.upper() == "RESET"):
                 setpoint_msg.x = 0.0
                 setpoint_msg.y = 0.0
                 setpoint_msg.z = 0.0
                 setpoint_msg.yaw = 0.0
+                setpoint_msg.yawspeed = 0.0
+                setpoint_msg.vx = 0.0
+                setpoint_msg.vy = 0.0
+                setpoint_msg.vz = 0.0
+                setpoint_msg.acceleration = [0.0, 0.0, 0.0]
+                setpoint_msg.jerk = [0.0, 0.0, 0.0]
+                setpoint_msg.thrust = [0.0, 0.0, 0.0]
 
                 control_msg.arm = False
-                control_msg.launch = False
+                control_msg.launch = True
 
                 print("All reset..")
 
