@@ -25,7 +25,7 @@ class DroneControlNode(Node):
         self.prompt_user()
 
 
-    # Prompt user for text file with setpoint data
+    # Prompt user for commands
     def prompt_user(self):
 
         # Create DroneControl message instance
@@ -46,6 +46,15 @@ class DroneControlNode(Node):
             # If input is blank, catch error
             if (send_control_input == ""):
                 send_control_input = "blank"
+
+            # Check which drone to control
+            first_space = send_control_input.find(" ", 0, len(send_control_input))
+            if ( (send_control_input[:first_space].isdigit()) and (first_space != -1) ):
+                control_msg.drone = int(send_control_input[:first_space])
+                setpoint_msg.drone = int(send_control_input[:first_space])
+                send_control_input = send_control_input[first_space+1:]
+            else:
+                send_control_input = "NO DRONE CHOSEN"
 
             # Check command input
             if (send_control_input.upper() == "DISARM"):
